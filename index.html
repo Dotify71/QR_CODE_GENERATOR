@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="page-title"> QR Code Generator</h1>
+    <div class="card">
+        <div class="section block-mustard">
+            <span class="section-label">Your Text or URL</span>
+            <input type="text" id="inp" placeholder="e.g. https://yoursite.com" autocomplete="off" spellcheck="false">
+            <p class="error-msg" id="error-msg">⚠ Please enter something first!</p>
+            <p class="hint">Enter any URL, plain text, Wi-fi credentials or contact info.</p>
+        </div>
+
+        <div class="section block-brick">
+            <span class="section-label">QR Size</span>
+            <div class="chip-row">
+                <button class="chip" data-size="150">Small · 150px</button>
+                <button class="chip active" data-size="200">Medium · 200px</button>
+                <button class="chip" data-size="300">Large · 300px</button>
+            </div>
+            <p class="hint" style="margin-top:10px;">Large sizes work better for printing or posters.</p>
+        </div>
+
+        <button class="btn-generate" id="btn">Generate QR Code ✨</button>
+
+        <div class="section block-sky" id="qr-section">
+            <span class="section-label">You QR Code</span>
+            <div class="qr-inner">
+                <div class="qr-frame">
+                    <img id="qr-img" alt="QR Code">
+                </div>
+                <p class="qr-status" id="qr-status"></p>
+                <span class="encoded-label">Encoded value</span>
+                <span class="encoded-value" id="qr-label"></span>
+                <button class="btn-download" id="dl-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                       <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download PNG
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="footer">Uses the free QR Server API · nothing is stored 🍪</p>
+
+    <script src="script.js"></script>
+</body>
+</html>
