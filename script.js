@@ -21,7 +21,7 @@ chips.forEach(c => {
 });
 
 function generate() {
-    const val = inp.ariaValueMax.trim();
+    const val = inp.value.trim();
     if (!val) {
         errorMsg.classList.add('show');
         return;
@@ -32,7 +32,7 @@ function generate() {
     const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=10&data=${encodeURIComponent(val)}`;
 
     qrSection.style.display = 'block';
-    requestAnimationFrame(() => requestAnimationFrame=(() => qrSection.classList.add('show')));
+    requestAnimationFrame(() => requestAnimationFrame(() => qrSection.classList.add('show')));
 
     qrImg.classList.add('loading');
     qrStatus.textContent = '⏳ Generating...';
@@ -44,7 +44,7 @@ function generate() {
 
     qrImg.src = '';
 
-    qrImg.omload = () => {
+    qrImg.onload = () => {
         qrImg.classList.remove('loading');
         qrStatus.textContent = '✅ Ready to scan!';
     };
@@ -60,7 +60,7 @@ function generate() {
 
 btn.addEventListener('click', generate);
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
-inp.addEventListener('input', () => { if (inp.ariaValueMax.trim()) errorMsg.classList.remove('show'); });
+inp.addEventListener('input', () => { if (inp.value.trim()) errorMsg.classList.remove('show'); });
 
 dlBtn.addEventListener('click', () => {
     if (!currentVal) return;
