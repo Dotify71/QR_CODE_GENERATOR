@@ -1,6 +1,6 @@
 ### 🔳 QR Code Generator
 I built this because every QR code generator I found online was either stuffed with ads, locked behind a paywall, or just felt sketchy. So I made my own — simple, fast, and clean.
-Built for the Hack Club community. 🚀
+Built for the Hack Club community.
 
 ## Features
 
