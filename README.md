@@ -1,27 +1,45 @@
-### 🔳 QR Code Generator
-I built this because every QR code generator I found online was either stuffed with ads, locked behind a paywall, or just felt sketchy. So I made my own — simple, fast, and clean.
-Built for the Hack Club community.
+# QR Studio
+
+A clean, professional QR code generator built with vanilla HTML, CSS, and JavaScript. No ads, no tracking, no sign-up required.
 
 ## Features
 
-1. Fast — type something, hit generate, done.
-2. Size options — small, medium, or large (up to 300px).
-3. Download — saves the QR code as a PNG with one click.
-4. Private — uses the free goqr.me API. Nothing is stored or tracked.
+- **Fast Generation** — Enter your content and generate QR codes instantly
+- **Multiple Sizes** — Choose from Small (150px), Medium (200px), Large (300px), or XL (500px)
+- **Color Options** — Customize QR code colors with preset options
+- **Download Ready** — Export high-quality PNG files with one click
+- **Copy URL** — Quickly copy the QR code image URL to share
+- **Dark Mode** — Automatic theme detection with manual toggle
+- **History** — Recent QR codes are saved locally for quick access
+- **Privacy First** — Uses the free QR Server API. No data is stored on our servers
 
-## How it's built
+## Tech Stack
 
-1. HTML & CSS — clean, colorful UI with a blocky feel.
-2. Vanilla JavaScript — handles the API, image loading, and download.
-3. Fonts — Fredoka One & Nunito, because default fonts are sad.
+- **HTML5** — Semantic markup
+- **CSS3** — Modern CSS with custom properties, grid layout, and smooth transitions
+- **Vanilla JavaScript** — No frameworks, just clean, efficient code
+- **Inter Font** — Professional typography via Google Fonts
 
-## How to run it
-1. No installs, no servers, nothing fancy.
-2. Clone or download the repo.
-3. Open index.html in your browser.
-4. Generate QR codes for links, Wi-Fi passwords, secret messages, whatever.
+## Getting Started
 
-## What's planning next
-Maybe custom colors or a logo in the center of the QR code someday — if I get around to it.
+1. Clone or download this repository
+2. Open `index.html` in any modern web browser
+3. Start generating QR codes
 
-*** Build with ❤️ for Hackclub, by Dushyant Acharya ***
+## Usage
+
+1. Enter your URL, text, or any content you want to encode
+2. Select your preferred size and color
+3. Click "Generate QR Code" or press Enter
+4. Download the PNG or copy the URL to share
+
+## Browser Support
+
+Works in all modern browsers that support:
+- CSS Grid
+- CSS Custom Properties
+- ES6 JavaScript
+
+---
+
+Built by Dushyant Acharya
