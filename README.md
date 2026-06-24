@@ -42,4 +42,4 @@ Works in all modern browsers that support:
 
 ---
 
-Built by Dushyant Acharya For HackClub
+Built by Dushyant Acharya
