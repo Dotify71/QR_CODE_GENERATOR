@@ -134,11 +134,12 @@ function getAdjustedSizeForScreen(size) {
     return size;
 }
 
-function buildQrUrl(value, size, color) {
+function buildQrUrl(value, size, color, margin = 10) {
     const adjustedSize = getAdjustedSizeForScreen(size);
 
-    return `https://api.qrserver.com/v1/create-qr-code/?size=${adjustedSize}x${adjustedSize}&margin=10&color=${color}&data=${encodeURIComponent(value)}`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${adjustedSize}x${adjustedSize}&margin=${margin}&color=${color}&data=${encodeURIComponent(value)}`;
 }
+
 
 function generateQR() {
     const value = qrInput.value.trim();
@@ -208,7 +209,7 @@ function clearInput() {
 function downloadQR() {
     if (!currentValue) return;
 
-    const url = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=10&color=${currentColor}&data=${encodeURIComponent(currentValue)}`;
+    const url = buildQrUrl(currentValue, currentSize, currentColor);
 
     const link = document.createElement('a');
     link.href = url;
@@ -221,12 +222,14 @@ function downloadQR() {
     showToast('QR code downloaded');
 }
 
+
 function copyURL() {
     if (!currentValue) return;
 
-    const url = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=10&color=${currentColor}&data=${encodeURIComponent(currentValue)}`;
+    const url = buildQrUrl(currentValue, currentSize, currentColor);
 
     const tryClipboard = () => {
+
         if (navigator.clipboard && window.isSecureContext) {
             return navigator.clipboard.writeText(url);
         }
