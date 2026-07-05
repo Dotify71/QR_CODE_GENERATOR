@@ -41,5 +41,3 @@ Works in all modern browsers that support:
 - ES6 JavaScript
 
 ---
-
-Built with ❤️ by Dushyant Acharya
