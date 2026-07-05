@@ -12,6 +12,7 @@
 - [x] Quick manual verification (generate, resize, theme toggle, history click, download, copy).
 
 
-- [ ] Commit + push to GitHub.
+- [x] Commit + push to GitHub.
+
 
 
