@@ -1,4 +1,6 @@
 :root {
+    color-scheme: light dark;
+
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
     --bg-card: #ffffff;
@@ -787,6 +789,13 @@ body {
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
 }
+
+.input-wrapper input:focus-visible,
+button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 2px;
+}
+
 
 [data-theme="dark"] .input-wrapper input:focus {
     box-shadow: 0 0 0 3px rgba(241, 245, 249, 0.1);

@@ -20,6 +20,10 @@ let currentColor = '000000';
 let currentValue = '';
 let history = [];
 let resizeTimeout;
+let activeRequestId = 0;
+let currentApiUrl = '';
+let qrUrlCache = new Map();
+
 
 // Safe localStorage wrapper
 const storage = {
@@ -81,7 +85,19 @@ function setupEventListeners() {
     themeToggle.addEventListener('click', toggleTheme);
     clearHistoryBtn.addEventListener('click', clearHistory);
 
+    historyList.addEventListener('click', (e) => {
+        const item = e.target && e.target.closest ? e.target.closest('.history-item') : null;
+        if (!item) return;
+
+        const value = decodeURIComponent(item.dataset.value || '');
+        if (!value) return;
+
+        qrInput.value = value;
+        generateQR();
+    });
+
     qrInput.addEventListener('keydown', (e) => {
+
         if (e.key === 'Enter') generateQR();
     });
 
@@ -110,6 +126,20 @@ function setupEventListeners() {
     });
 }
 
+function getAdjustedSizeForScreen(size) {
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth < 374 && size > 200) return 200;
+    if (screenWidth < 479 && size > 300) return 300;
+    return size;
+}
+
+function buildQrUrl(value, size, color) {
+    const adjustedSize = getAdjustedSizeForScreen(size);
+
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${adjustedSize}x${adjustedSize}&margin=10&color=${color}&data=${encodeURIComponent(value)}`;
+}
+
 function generateQR() {
     const value = qrInput.value.trim();
 
@@ -121,17 +151,20 @@ function generateQR() {
     hideError();
     currentValue = value;
 
-    // Adjust size for very small screens
-    const screenWidth = window.innerWidth;
-    let adjustedSize = currentSize;
+    // Request staleness protection: newer generates invalidate older image load callbacks.
+    const requestId = ++activeRequestId;
 
-    if (screenWidth < 374 && currentSize > 200) {
-        adjustedSize = 200;
-    } else if (screenWidth < 479 && currentSize > 300) {
-        adjustedSize = 300;
+    const cacheKey = `${value}__${currentSize}__${currentColor}__${window.innerWidth}`;
+    let apiUrl = qrUrlCache.get(cacheKey);
+
+    if (!apiUrl) {
+        apiUrl = buildQrUrl(value, currentSize, currentColor);
+        // Cache a bit (avoid unbounded growth)
+        if (qrUrlCache.size > 30) qrUrlCache.clear();
+        qrUrlCache.set(cacheKey, apiUrl);
     }
 
-    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${adjustedSize}x${adjustedSize}&margin=10&color=${currentColor}&data=${encodeURIComponent(value)}`;
+    currentApiUrl = apiUrl;
 
     qrResult.classList.add('show');
     qrLoader.classList.add('show');
@@ -140,9 +173,14 @@ function generateQR() {
     qrStatus.className = 'qr-status';
     qrContent.textContent = value;
 
+    // Ensure stale handlers don't update UI after a new generation.
+    qrImage.onload = null;
+    qrImage.onerror = null;
     qrImage.src = '';
 
     qrImage.onload = () => {
+        if (requestId !== activeRequestId) return;
+
         qrLoader.classList.remove('show');
         qrImage.classList.add('loaded');
         qrStatus.textContent = 'Ready to scan';
@@ -150,6 +188,8 @@ function generateQR() {
     };
 
     qrImage.onerror = () => {
+        if (requestId !== activeRequestId) return;
+
         qrLoader.classList.remove('show');
         qrStatus.textContent = 'Failed to load. Please check your connection.';
         qrStatus.classList.add('error');
@@ -157,6 +197,7 @@ function generateQR() {
 
     qrImage.src = apiUrl;
 }
+
 
 function clearInput() {
     qrInput.value = '';
@@ -185,12 +226,36 @@ function copyURL() {
 
     const url = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=10&color=${currentColor}&data=${encodeURIComponent(currentValue)}`;
 
-    navigator.clipboard.writeText(url).then(() => {
+    const tryClipboard = () => {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(url);
+        }
+
+        return new Promise((resolve, reject) => {
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = url;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.top = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                ok ? resolve() : reject(new Error('copy-failed'));
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+
+    tryClipboard().then(() => {
         showToast('URL copied to clipboard');
     }).catch(() => {
         showToast('Failed to copy URL');
     });
 }
+
 
 function showError(message) {
     errorMessage.textContent = message;
@@ -274,14 +339,10 @@ function renderHistory() {
         </div>
     `).join('');
 
-    historyList.querySelectorAll('.history-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const value = decodeURIComponent(item.dataset.value);
-            qrInput.value = value;
-            generateQR();
-        });
-    });
+    // Use event delegation for better performance and fewer re-renders.
+    // (Listeners are attached once in init.)
 }
+
 
 function clearHistory() {
     history = [];
